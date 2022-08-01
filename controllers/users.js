@@ -14,8 +14,8 @@ module.exports.getUser = (req, res) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(err.statusCode).send({ message: 'Введен неверный _id пользователя' });
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: 'Введен неверный _id пользователя' });
       }
       if (err.name === 'NotFoundError') {
         res.status(err.statusCode).send({ message: `${err.message}` });
@@ -63,7 +63,7 @@ module.exports.patchUserInfo = (req, res) => {
         return;
       }
       if (err.name === 'ValidationError') {
-        res.status(401).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка сервера' });
@@ -90,7 +90,7 @@ module.exports.patchAvatarInfo = (req, res) => {
         return;
       }
       if (err.name === 'ValidationError') {
-        res.status(401).send({ message: 'Переданы некорректные данные при обновлении аватара' });
+        res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка сервера' });

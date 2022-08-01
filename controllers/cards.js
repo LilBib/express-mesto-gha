@@ -34,6 +34,10 @@ module.exports.deleteCard = (req, res) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка' });
+        return;
+      }
       if (err.name === 'NotFoundError') {
         res.status(err.statusCode).send({ message: `${err.message}` });
         return;
@@ -52,12 +56,12 @@ module.exports.likeCard = (req, res) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'NotFoundError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка' });
         return;
       }
-      if (err.name === 'ValidationError') {
-        res.status(401).send({ message: 'Переданы некорректные данные для постановки лайка' });
+      if (err.name === 'NotFoundError') {
+        res.status(err.statusCode).send({ message: `${err.message}` });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка сервера' });
@@ -78,8 +82,8 @@ module.exports.dislikeCard = (req, res) => {
         res.status(err.statusCode).send({ message: `${err.message}` });
         return;
       }
-      if (err.name === 'ValidationError') {
-        res.status(401).send({ message: 'Переданы некорректные данные для снятия лайка' });
+      if (err.name === 'ValidationError' || err.name === 'CastError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка' });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка сервера' });
