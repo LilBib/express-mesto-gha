@@ -28,14 +28,14 @@ module.exports.createCard = (req, res) => {
     });
 };
 module.exports.deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
+  Card.findByIdAndRemove(req.params.cardId)
     .orFail(() => {
       throw new NotFoundError('Карточка с указанным _id не найдена');
     })
-    .then((user) => res.send({ data: user }))
+    .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка' });
+        res.status(400).send({ message: 'Переданы некорректные данные удаления карточки' });
         return;
       }
       if (err.name === 'NotFoundError') {
