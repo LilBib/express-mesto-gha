@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
-const ValidationError = require('../errors/ValudationError');
+const ValidationError = require('../errors/ValidationError');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -14,6 +14,9 @@ module.exports.getUser = (req, res) => {
     })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(err.statusCode).send({ message: 'Введен неверный _id пользователя' });
+      }
       if (err.name === 'NotFoundError') {
         res.status(err.statusCode).send({ message: `${err.message}` });
         return;
