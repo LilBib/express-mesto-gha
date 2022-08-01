@@ -1,11 +1,12 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const { validationErrorCode, notFoundErrorCode, defaultErrorCode } = require('../utils/constants');
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка сервера' }));
+    .catch(() => res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' }));
 };
 
 module.exports.createCard = (req, res) => {
@@ -21,10 +22,10 @@ module.exports.createCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        res.status(validationErrorCode).send({ message: `${err.message}` });
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка сервера' });
+      res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });
     });
 };
 module.exports.deleteCard = (req, res) => {
@@ -35,14 +36,14 @@ module.exports.deleteCard = (req, res) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные удаления карточки' });
+        res.status(validationErrorCode).send({ message: 'Переданы некорректные данные удаления карточки' });
         return;
       }
       if (err.name === 'NotFoundError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        res.status(notFoundErrorCode).send({ message: `${err.message}` });
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка сервера' });
+      res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });
     });
 };
 module.exports.likeCard = (req, res) => {
@@ -57,14 +58,14 @@ module.exports.likeCard = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка' });
+        res.status(validationErrorCode).send({ message: 'Переданы некорректные данные для постановки лайка' });
         return;
       }
       if (err.name === 'NotFoundError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        res.status(notFoundErrorCode).send({ message: `${err.message}` });
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка сервера' });
+      res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });
     });
 };
 module.exports.dislikeCard = (req, res) => {
@@ -79,13 +80,13 @@ module.exports.dislikeCard = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFoundError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        res.status(notFoundErrorCode).send({ message: `${err.message}` });
         return;
       }
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка' });
+        res.status(validationErrorCode).send({ message: 'Переданы некорректные данные для снятия лайка' });
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка сервера' });
+      res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });
     });
 };

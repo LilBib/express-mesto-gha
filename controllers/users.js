@@ -1,11 +1,12 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
+const { validationErrorCode, notFoundErrorCode, defaultErrorCode } = require('../utils/constants');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка сервера' }));
+    .catch(() => res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' }));
 };
 module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
@@ -15,13 +16,13 @@ module.exports.getUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
-        res.status(400).send({ message: 'Введен неверный _id пользователя' });
+        res.status(validationErrorCode).send({ message: 'Введен неверный _id пользователя' });
       }
       if (err.name === 'NotFoundError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        res.status(notFoundErrorCode).send({ message: `${err.message}` });
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка сервера' });
+      res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });
     });
 };
 module.exports.createUser = (req, res) => {
@@ -37,10 +38,10 @@ module.exports.createUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        res.status(validationErrorCode).send({ message: `${err.message}` });
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка сервера' });
+      res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });
     });
 };
 module.exports.patchUserInfo = (req, res) => {
@@ -59,14 +60,14 @@ module.exports.patchUserInfo = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFoundError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        res.status(notFoundErrorCode).send({ message: `${err.message}` });
         return;
       }
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
+        res.status(validationErrorCode).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка сервера' });
+      res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });
     });
 };
 module.exports.patchAvatarInfo = (req, res) => {
@@ -77,7 +78,6 @@ module.exports.patchAvatarInfo = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .orFail(() => {
@@ -86,13 +86,13 @@ module.exports.patchAvatarInfo = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'NotFoundError') {
-        res.status(err.statusCode).send({ message: `${err.message}` });
+        res.status(notFoundErrorCode).send({ message: `${err.message}` });
         return;
       }
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные при обновлении аватара' });
+        res.status(validationErrorCode).send({ message: 'Переданы некорректные данные при обновлении аватара' });
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка сервера' });
+      res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });
     });
 };
