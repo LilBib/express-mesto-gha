@@ -1,5 +1,7 @@
+const { notFoundErrorCode } = require('../utils/constants');
+
 const responseOnNonexistentRoute = (req, res) => {
-  res.status(404).send({ message: 'Такого адреса не существует' });
+  res.status(notFoundErrorCode).send({ message: 'Такого адреса не существует' });
 };
 
 module.exports = responseOnNonexistentRoute;
