@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
-const ValidationError = require('../errors/ValidationError');
 const { validationErrorCode, notFoundErrorCode, defaultErrorCode } = require('../utils/constants');
 
 module.exports.getUsers = (req, res) => {
@@ -32,13 +31,7 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные при создании пользователя');
-      }
-      return err;
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(validationErrorCode).send({ message: `${err.message}` });
+        res.status(validationErrorCode).send({ message: 'Переданы некорректные данные при создании пользователя' });
         return;
       }
       res.status(defaultErrorCode).send({ message: 'Произошла ошибка сервера' });

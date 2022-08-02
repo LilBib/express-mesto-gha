@@ -1,5 +1,3 @@
-const notFoundErrorStatusCode = 404;
-const validationErrorStatusCode = 400;
-const defaultErrorStatusCode = 500;
-
-module.exports = { validationErrorStatusCode, notFoundErrorStatusCode, defaultErrorStatusCode };
+module.exports.notFoundErrorCode = 404;
+module.exports.validationErrorCode = 400;
+module.exports.defaultErrorCode = 500;
