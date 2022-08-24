@@ -31,11 +31,8 @@ module.exports.deleteCard = (req, res, next) => {
       throw new NotFoundError('Карточка с указанным _id не найдена');
     })
     .then((card) => {
-      if (card.owner === req.body._id) {
+      if (card.owner.toString() === req.body._id) {
         Card.findByIdAndRemove(card._id)
-          .orFail(() => {
-            throw new NotFoundError('Карточка с указанным _id не найдена');
-          })
           // eslint-disable-next-line no-shadow
           .then((card) => res.send({ data: card }))
           .catch((err) => {
@@ -44,10 +41,11 @@ module.exports.deleteCard = (req, res, next) => {
             } next(err);
           })
           .catch(next);
+      } else {
+        const error = new Error('Вы не можете удалить чужую карточку');
+        error.statusCode = noRightsErrorCode;
+        next(error);
       }
-      const error = new Error('Вы не можете удалить чужую карточку');
-      error.statusCode = noRightsErrorCode;
-      next(error);
     })
     .catch(next);
 };
