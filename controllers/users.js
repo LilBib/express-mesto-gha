@@ -113,7 +113,7 @@ module.exports.login = (req, res, next) => {
     });
 };
 module.exports.getCurrentUser = (req, res, next) => {
-  User.findOne({ id: req.body._id })
+  User.findOne({ _id: req.body._id })
     .then((user) => {
       res.send(user);
     })
