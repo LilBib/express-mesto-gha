@@ -37,7 +37,7 @@ module.exports.createUser = (req, res, next) => {
         .then((user) => {
           if (validator.isEmail(user.email)) {
             // eslint-disable-next-line no-param-reassign
-            user.password = password;
+            // user.password = password;
             return user;
           }
           return new ValidationError('Неверно введена почта');
