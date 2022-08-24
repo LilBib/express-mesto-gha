@@ -13,7 +13,7 @@ router.post(
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
-      password: Joi.string.required(),
+      password: Joi.string().required(),
     }).unknown(true),
   }),
   login,
@@ -23,7 +23,7 @@ router.post(
   celebrate({
     body: Joi.object().keys({
       email: Joi.string().required().email(),
-      password: Joi.string.required(),
+      password: Joi.string().required(),
     }).unknown(true),
   }),
   createUser,
@@ -33,7 +33,7 @@ router.patch(
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
-      about: Joi.string.required().min(2).max(30),
+      about: Joi.string().required().min(2).max(30),
     }).unknown(true),
   }),
   auth,
@@ -43,7 +43,7 @@ router.patch(
   '/me/avatar',
   celebrate({
     body: Joi.object().keys({
-      link: Joi.string.required().uri(),
+      link: Joi.string().required().uri(),
     }).unknown(true),
   }),
   auth,
