@@ -2,32 +2,12 @@ const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const auth = require('../middlewares/auth');
 const {
-  getUsers, getUser, createUser, patchUserInfo, patchAvatarInfo, login, getCurrentUser,
+  getUsers, getUser, patchUserInfo, patchAvatarInfo, getCurrentUser,
 } = require('../controllers/users');
 
 router.get('/', auth, getUsers);
 router.get('/me', auth, getCurrentUser);
 router.get('/:userId', auth, getUser);
-router.post(
-  '/signin',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-    }).unknown(true),
-  }),
-  login,
-);
-router.post(
-  '/signup',
-  celebrate({
-    body: Joi.object().keys({
-      email: Joi.string().required().email(),
-      password: Joi.string().required(),
-    }).unknown(true),
-  }),
-  createUser,
-);
 router.patch(
   '/me',
   celebrate({
