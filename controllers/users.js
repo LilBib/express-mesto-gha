@@ -35,9 +35,20 @@ module.exports.createUser = (req, res, next) => {
         name, about, avatar, email, password: hashedPassword,
       })
         .then((user) => {
+          const {
+            // eslint-disable-next-line no-shadow
+            name, about, avatar, email,
+          } = user;
+          const newUser = {
+            name,
+            about,
+            avatar,
+            email,
+          };
+          return newUser;
+        })
+        .then((user) => {
           if (validator.isEmail(user.email)) {
-            // eslint-disable-next-line no-param-reassign
-            // user.password = password;
             return user;
           }
           return new ValidationError('Неверно введена почта');

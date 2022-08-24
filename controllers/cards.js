@@ -27,6 +27,9 @@ module.exports.createCard = (req, res, next) => {
 };
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
+    .orFail(() => {
+      throw new NotFoundError('Карточка с указанным _id не найдена');
+    })
     .then((card) => {
       if (card.owner === req.body._id) {
         Card.findByIdAndRemove(card._id)
@@ -38,7 +41,7 @@ module.exports.deleteCard = (req, res, next) => {
           .catch((err) => {
             if (err.name === 'ValidationError' || err.name === 'CastError') {
               throw new ValidationError('Переданы некорректные данные при удалении карточки');
-            }
+            } next(err);
           })
           .catch(next);
       }
