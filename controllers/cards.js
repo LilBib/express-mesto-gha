@@ -62,6 +62,7 @@ module.exports.likeCard = (req, res, next) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         throw new ValidationError('Переданы некорректные данные для постановки лайка');
       }
+      next(err);
     })
     .catch(next);
 };
@@ -79,6 +80,7 @@ module.exports.dislikeCard = (req, res, next) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         throw new ValidationError('Переданы некорректные данные для снятия лайка');
       }
+      next(err);
     })
     .catch(next);
 };
