@@ -18,13 +18,13 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    validate: {
-      validator(v) {
-        // eslint-disable-next-line no-useless-escape
-        return /^[htps]{4,5}\.[[w]{3}\.]?[\w\-\.\~\:\/\?\#\@\!\$\&\'\(\)\*\+\,\;\=\[\]]+/m.test(v);
-      },
-      message: (props) => `${props.value} is not a valid link!`,
-    },
+    // validate: {
+    // validator(v) {
+    // eslint-disable-next-line no-useless-escape, max-len
+    // return /^[htps]{4,5}\:\\{2}\.[[w]{3}\.]?[\w\-\.\~\:\/\?\#\@\!\$\&\'\(\)\*\+\,\;\=\[\]]+/m.test(v);
+    // },
+    // message: (props) => `${props.value} is not a valid link!`,
+    // },
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
