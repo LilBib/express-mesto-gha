@@ -20,9 +20,9 @@ module.exports.getUser = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new ValidationError('Передан неверный id пользователя'));
+        return next(new ValidationError('Передан неверный id пользователя'));
       }
-      next(err);
+      return next(err);
     });
 };
 module.exports.createUser = (req, res, next) => {
@@ -58,9 +58,9 @@ module.exports.createUser = (req, res, next) => {
     });
 };
 module.exports.patchUserInfo = (req, res, next) => {
-  const { name, about, _id } = req.body;
+  const { name, about } = req.body;
   User.findByIdAndUpdate(
-    _id,
+    req.user._id,
     { name, about },
     {
       new: true, // обработчик then получит на вход обновлённую запись
@@ -73,15 +73,15 @@ module.exports.patchUserInfo = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные при обновлении профиля');
+        return next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
       }
-    })
-    .catch(next);
+      return next(err);
+    });
 };
 module.exports.patchAvatarInfo = (req, res, next) => {
-  const { avatar, _id } = req.body;
+  const { avatar } = req.body;
   User.findByIdAndUpdate(
-    _id,
+    req.user._id,
     { avatar },
     {
       new: true,
@@ -94,10 +94,10 @@ module.exports.patchAvatarInfo = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new ValidationError('Переданы некорректные данные при обновлении аватара');
+        return next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
       }
-    })
-    .catch(next);
+      return next(err);
+    });
 };
 
 module.exports.login = (req, res, next) => {
@@ -108,12 +108,10 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, secretKey, { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch(() => {
-      next(new UnauthorizedError('Ошибка авторизации'));
-    });
+    .catch(() => next(new UnauthorizedError('Ошибка авторизации')));
 };
 module.exports.getCurrentUser = (req, res, next) => {
-  User.findOne({ _id: req.body._id })
+  User.findOne({ _id: req.user._id })
     .then((user) => {
       res.send(user);
     })
