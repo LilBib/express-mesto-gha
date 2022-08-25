@@ -23,9 +23,7 @@ module.exports.createCard = (req, res, next) => {
 };
 module.exports.deleteCard = (req, res, next) => {
   Card.findById(req.params.cardId)
-    .orFail(() => {
-      throw new NotFoundError('Карточка с указанным _id не найдена');
-    })
+    .orFail(() => next(new NotFoundError('Карточка с указанным _id не найдена')))
     // eslint-disable-next-line consistent-return
     .then((card) => {
       if (card.owner.toString() === req.user._id) {
@@ -49,9 +47,7 @@ module.exports.likeCard = (req, res, next) => {
     { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
     { new: true },
   )
-    .orFail(() => {
-      throw new NotFoundError('Передан несуществующий _id карточки');
-    })
+    .orFail(() => next(new NotFoundError('Передан несуществующий _id карточки')))
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -66,9 +62,7 @@ module.exports.dislikeCard = (req, res, next) => {
     { $pull: { likes: req.user._id } }, // убрать _id из массива
     { new: true },
   )
-    .orFail(() => {
-      throw new NotFoundError('Передан несуществующий _id карточки');
-    })
+    .orFail(() => next(new NotFoundError('Передан несуществующий _id карточки')))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
