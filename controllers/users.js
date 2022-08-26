@@ -51,7 +51,7 @@ module.exports.createUser = (req, res, next) => {
           if (validator.isEmail(user.email)) {
             return user;
           }
-          return new ValidationError('Неверно введена почта');
+          throw new ValidationError('Неверно введена почта');
         })
         .then((result) => res.send({ data: result }))
         .catch(next);
