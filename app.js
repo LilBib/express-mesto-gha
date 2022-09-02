@@ -20,8 +20,9 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false */
 })
   .catch(errorsHandler);
-app.use(cors());
+
 app.options('*', cors());
+app.use(cors());
 app.use(requestLogger);
 app.post(
   '/signin',
