@@ -16,7 +16,7 @@ module.exports.createCard = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
+        return next(new ValidationError('Переданы некорректные данные при добавлении карточки'));
       }
       return next(err);
     });
