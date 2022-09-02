@@ -5,6 +5,8 @@ const process = require('process');
 const { celebrate, Joi, errors } = require('celebrate');
 const { errorsHandler } = require('./middlewares/errorsHandler');
 const { createUser, login } = require('./controllers/users');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+require('dotenv').config();
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -17,6 +19,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false */
 })
   .catch(errorsHandler);
+app.use(requestLogger);
 app.post(
   '/signin',
   celebrate({
@@ -45,6 +48,7 @@ app.use('/users', require('./routes/users'));
 app.use('/cards', require('./routes/cards'));
 app.use('/', require('./routes/nonexistent'));
 
+app.use(errorLogger);
 app.use(errors());
 app.use(errorsHandler);
 
