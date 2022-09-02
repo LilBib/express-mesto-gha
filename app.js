@@ -20,9 +20,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useFindAndModify: false */
 })
   .catch(errorsHandler);
-app.use(cors({
-  origin: ['http://vladimirmisakyan.mesto.project.nomoredomains.sbs/', 'https://vladimirmisakyan.mesto.project.nomoredomains.sbs/'],
-}));
+app.use(cors());
+app.options('*', cors());
 app.use(requestLogger);
 app.post(
   '/signin',
