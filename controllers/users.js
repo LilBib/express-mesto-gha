@@ -110,7 +110,6 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch((err) => console.log(err))
     .catch(() => next(new UnauthorizedError('Ошибка авторизации')));
 };
 module.exports.getCurrentUser = (req, res, next) => {
