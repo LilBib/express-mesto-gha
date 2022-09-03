@@ -12,7 +12,7 @@ router.post(
       name: Joi.string().required().min(2).max(30),
       // eslint-disable-next-line no-useless-escape
       link: Joi.string().required().pattern(/^[htps]{4,5}\:\/{2}([[w]{3}\.])?[\w\-\.\~\:\/\?\#\@\!\$\&\'\(\)\*\+\,\;\=\[\]]+/m, 'link'),
-    }).unknown(true),
+    }),
   }),
   auth,
   createCard,
@@ -23,7 +23,7 @@ router.delete(
   celebrate({
     params: Joi.object().keys({
       cardId: Joi.string().required().pattern(/\w{24}/, 'id'),
-    }).unknown(true),
+    }),
   }),
   auth,
   deleteCard,
@@ -33,7 +33,7 @@ router.put(
   celebrate({
     params: Joi.object().keys({
       cardId: Joi.string().required().pattern(/\w{24}/, 'id'),
-    }).unknown(true),
+    }),
   }),
   auth,
   likeCard,
@@ -43,7 +43,7 @@ router.delete(
   celebrate({
     params: Joi.object().keys({
       cardId: Joi.string().required().pattern(/\w{24}/, 'id'),
-    }).unknown(true),
+    }),
   }),
   auth,
   dislikeCard,

@@ -30,16 +30,12 @@ module.exports.deleteCard = (req, res, next) => {
         Card.findByIdAndRemove(card._id)
           // eslint-disable-next-line no-shadow
           .then((card) => res.send({ data: card }))
-          .catch((err) => {
-            if (err.name === 'ValidationError') {
-              return next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
-            }
-            return next(err);
-          });
+          .catch(next);
       } else {
         return next(new NoRightsError('Нельзя удалять чужие карточки!'));
       }
-    });
+    })
+    .catch(next);
 };
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
@@ -50,8 +46,10 @@ module.exports.likeCard = (req, res, next) => {
     .orFail(() => next(new NotFoundError('Передан несуществующий _id карточки')))
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
+      if (err.name === 'Cast error') {
+        // eslint-disable-next-line no-param-reassign
+        err.message = 'Неверный _id карточки';
+        return next(err);
       }
       return next(err);
     });
@@ -65,8 +63,10 @@ module.exports.dislikeCard = (req, res, next) => {
     .orFail(() => next(new NotFoundError('Передан несуществующий _id карточки')))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError('Переданы некорректные данные при обновлении профиля'));
+      if (err.name === 'Cast error') {
+        // eslint-disable-next-line no-param-reassign
+        err.message = 'Неверный _id карточки';
+        return next(err);
       }
       return next(err);
     });

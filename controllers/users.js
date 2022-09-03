@@ -1,10 +1,10 @@
-const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const NotFoundError = require('../errors/NotFoundError');
 const ValidationError = require('../errors/ValidationError');
 const UnauthorizedError = require('../errors/UnauthorizedError');
+const ConflictError = require('../errors/ConflictError');
 require('dotenv').config();
 
 const { NODE_ENV, JWT_SECRET } = process.env;
@@ -20,12 +20,7 @@ module.exports.getUser = (req, res, next) => {
       next(new NotFoundError('Пользователь по указанному _id не найден'));
     })
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new ValidationError('Передан неверный id пользователя'));
-      }
-      return next(err);
-    });
+    .catch(next);
 };
 module.exports.createUser = (req, res, next) => {
   const {
@@ -49,15 +44,17 @@ module.exports.createUser = (req, res, next) => {
           };
           return newUser;
         })
-        .then((user) => {
-          if (validator.isEmail(user.email)) {
-            return user;
-          }
-          throw new ValidationError('Неверно введена почта');
-        })
         .then((result) => res.send({ data: result }))
-        .catch(next);
-    });
+        .catch((err) => {
+          if (err.name === 'ValidationError') {
+            return next(new ValidationError('Переданы некорректные данные при создании пользователя'));
+          } if (err.code === 11000) {
+            return next(new ConflictError('Пользователь с таким email уже существует'));
+          }
+          return next(err);
+        });
+    })
+    .catch(next);
 };
 module.exports.patchUserInfo = (req, res, next) => {
   const { name, about } = req.body;
