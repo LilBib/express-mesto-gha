@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const auth = require('../middlewares/auth');
+const { URLregex, idRegex } = require('../utils/constants');
 const {
   getCards, createCard, deleteCard, likeCard, dislikeCard,
 } = require('../controllers/cards');
@@ -11,41 +11,37 @@ router.post(
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
       // eslint-disable-next-line no-useless-escape
-      link: Joi.string().required().pattern(/^[htps]{4,5}\:\/{2}([[w]{3}\.])?[\w\-\.\~\:\/\?\#\@\!\$\&\'\(\)\*\+\,\;\=\[\]]+/m, 'link'),
+      link: Joi.string().required().pattern(URLregex, 'link'),
     }),
   }),
-  auth,
   createCard,
 );
-router.get('/', auth, getCards);
+router.get('/', getCards);
 router.delete(
   '/:cardId',
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().required().pattern(/\w{24}/, 'id'),
+      cardId: Joi.string().required().pattern(idRegex, 'id'),
     }),
   }),
-  auth,
   deleteCard,
 );
 router.put(
   '/:cardId/likes',
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().required().pattern(/\w{24}/, 'id'),
+      cardId: Joi.string().required().pattern(idRegex, 'id'),
     }),
   }),
-  auth,
   likeCard,
 );
 router.delete(
   '/:cardId/likes',
   celebrate({
     params: Joi.object().keys({
-      cardId: Joi.string().required().pattern(/\w{24}/, 'id'),
+      cardId: Joi.string().required().pattern(idRegex, 'id'),
     }),
   }),
-  auth,
   dislikeCard,
 );
 

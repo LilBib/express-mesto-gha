@@ -47,9 +47,7 @@ module.exports.likeCard = (req, res, next) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'Cast error') {
-        // eslint-disable-next-line no-param-reassign
-        err.message = 'Неверный _id карточки';
-        return next(err);
+        return next(new ValidationError('Неверный _id карточки'));
       }
       return next(err);
     });
@@ -64,9 +62,7 @@ module.exports.dislikeCard = (req, res, next) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'Cast error') {
-        // eslint-disable-next-line no-param-reassign
-        err.message = 'Неверный _id карточки';
-        return next(err);
+        return next(new ValidationError('Неверный _id карточки'));
       }
       return next(err);
     });
